@@ -1,12 +1,10 @@
-From finalduty/archlinux
-
-Maintainer Kamil Cukrowski <kamilcukrowski@gmail.com>
+From archlinux/base
 
 # install packages
 RUN set -xueo pipefail && \
   echo 'Install truestudio dependencies' && \
-  echo -ne '[aur-archlinux]\nSigLevel=Never\nServer = https://repo.itmettke.de/aur/$repo/$arch\n' >> /etc/pacman.conf && \
-  pacman --noconfirm -Sy webkitgtk && \
+  #echo -ne '[aur-archlinux]\nSigLevel=Never\nServer = https://repo.itmettke.de/aur/$repo/$arch\n' >> /etc/pacman.conf && \
+  pacman --noconfirm -Sy webkit2gtk && \
   echo '- SUCCESS prepare ------------------'
 
 # some const dependent on version
@@ -23,7 +21,7 @@ RUN set -xueo pipefail && \
   rm $(basename ${TRUESTUDIO_URL}.MD5) && \
   echo '- SUCCESS download ----------------------------'
 
-ENV TRUESTUDIO_INSTALL_PATH /opt/Atollic_TrueSTUDIO_for_STM32_9.0.0
+ENV TRUESTUDIO_INSTALL_PATH /opt/Atollic_TrueSTUDIO_for_STM32
 
 # create links in ONE RUN
 RUN set -xueo pipefail && \
@@ -42,7 +40,7 @@ RUN set -xueo pipefail && \
   tar xzfvp $f && \
   installPath=${TRUESTUDIO_INSTALL_PATH} && \
   scriptPath=$(basename ${TRUESTUDIO_INSTALL_PATH})_installer && \
-  cp ${scriptPath}/license.txt /ATOLLIC-END-USER-SOFTWARE-LICENSE-AGREEMENT && \
+  #cp ${scriptPath}/license.txt /ATOLLIC-END-USER-SOFTWARE-LICENSE-AGREEMENT && \
   mkdir -p ${installPath} && \
   tar xzvfp ${scriptPath}/install.data -C ${installPath} && \
   rm $f && rm -r ${scriptPath} && \
