@@ -1,13 +1,16 @@
-From debian:7-slim
+From debian:jessie-slim
 
 #Maintainer Kamil Cukrowski <kamilcukrowski@gmail.com>
 
 # install packages
 RUN \
   echo 'Install truestudio dependencies' && \
-  #echo -ne '[aur-archlinux]\nSigLevel=Never\nServer = https://repo.itmettke.de/aur/$repo/$arch\n' >> /etc/pacman.conf && \
   apt-get update && \
-  apt-get install -y curl && \
+  #apt-get install -y debian-keyring debian-archive-keyring&& \
+  #echo "deb http://http.us.debian.org/debian/ testing non-free contrib main\n" > /etc/apt/sources.list && \
+  #apt-get update && \
+  #apt-get upgrade -y && \
+  apt-get -y install curl libc6-dev  && \
   echo '- SUCCESS prepare ------------------'
 
 # some const dependent on version
@@ -24,7 +27,7 @@ RUN  \
   rm $(basename ${TRUESTUDIO_URL}.MD5) && \
   echo '- SUCCESS download ----------------------------'
 
-ENV TRUESTUDIO_INSTALL_PATH /opt/Atollic_TrueSTUDIO_for_STM32
+ENV TRUESTUDIO_INSTALL_PATH /opt/Atollic_TrueSTUDIO_for_STM32_9.2.0
 
 # create links in ONE RUN
 RUN  \
@@ -32,7 +35,7 @@ RUN  \
   echo 'Add truestudio tools and truestudio and headless.sh to PATH' && \
   echo 'PATH="$PATH:'"${installPath}"'/ARMTools/bin:'"${installPath}"'/PCTools/bin"' >> /etc/bash.bashrc && \
   ln -s "${installPath}/ide/TrueSTUDIO" /usr/bin/ && \
-  echo -ne '#!/bin/sh\ncd '"${installPath}"'/ide\nexec ./headless.sh "$@"\n' > /usr/bin/headless.sh && \
+  echo '#!/bin/sh\ncd '"${installPath}"'/ide\nexec ./headless.sh "$@"\n' > /usr/bin/headless.sh && \
   chmod +x /usr/bin/headless.sh && \
   echo '- SUCCESS postinstall --------------------------'
 
