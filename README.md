@@ -1,6 +1,6 @@
 # docker-truestudio
   
-Archlinux docker with installed TrueStudio from Atollic for headless builds.  
+Debian docker with installed TrueStudio from Atollic for headless builds.  
   
 # license
   
