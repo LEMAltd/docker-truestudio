@@ -1,10 +1,13 @@
-From archlinux/base
+From debian:7-slim
+
+#Maintainer Kamil Cukrowski <kamilcukrowski@gmail.com>
 
 # install packages
-RUN set -xueo pipefail && \
+RUN \
   echo 'Install truestudio dependencies' && \
   #echo -ne '[aur-archlinux]\nSigLevel=Never\nServer = https://repo.itmettke.de/aur/$repo/$arch\n' >> /etc/pacman.conf && \
-  pacman --noconfirm -Sy webkit2gtk && \
+  apt-get update && \
+  apt-get install -y curl && \
   echo '- SUCCESS prepare ------------------'
 
 # some const dependent on version
@@ -12,7 +15,7 @@ ENV TRUESTUDIO_VER x86_64_v9.2.0_20181203-0921
 ENV TRUESTUDIO_URL http://download.atollic.com/TrueSTUDIO/installers/Atollic_TrueSTUDIO_for_STM32_linux_${TRUESTUDIO_VER}.tar.gz
 
 # download in one RUN
-RUN set -xueo pipefail && \
+RUN  \
   echo 'Downlad truestudio and check md5sum' && \
   echo ${TRUESTUDIO_URL} ${TRUESTUDIO_VER} && \
   curl -O ${TRUESTUDIO_URL}     && \
@@ -24,7 +27,7 @@ RUN set -xueo pipefail && \
 ENV TRUESTUDIO_INSTALL_PATH /opt/Atollic_TrueSTUDIO_for_STM32
 
 # create links in ONE RUN
-RUN set -xueo pipefail && \
+RUN  \
   installPath=${TRUESTUDIO_INSTALL_PATH} && \
   echo 'Add truestudio tools and truestudio and headless.sh to PATH' && \
   echo 'PATH="$PATH:'"${installPath}"'/ARMTools/bin:'"${installPath}"'/PCTools/bin"' >> /etc/bash.bashrc && \
@@ -34,16 +37,14 @@ RUN set -xueo pipefail && \
   echo '- SUCCESS postinstall --------------------------'
 
 # install in the second RUN
-RUN set -xueo pipefail && \
+RUN \
   echo 'Unpack and install truestudio' && \
   f=$(basename ${TRUESTUDIO_URL}) && \
   tar xzfvp $f && \
   installPath=${TRUESTUDIO_INSTALL_PATH} && \
   scriptPath=$(basename ${TRUESTUDIO_INSTALL_PATH})_installer && \
-  #cp ${scriptPath}/license.txt /ATOLLIC-END-USER-SOFTWARE-LICENSE-AGREEMENT && \
+  cp ${scriptPath}/license.txt /ATOLLIC-END-USER-SOFTWARE-LICENSE-AGREEMENT && \
   mkdir -p ${installPath} && \
   tar xzvfp ${scriptPath}/install.data -C ${installPath} && \
   rm $f && rm -r ${scriptPath} && \
   echo '- SUCCESS installed ----------------------------'
-
-
