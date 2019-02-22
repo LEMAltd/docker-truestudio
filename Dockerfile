@@ -1,6 +1,4 @@
-From debian:jessie-slim
-
-#Maintainer Kamil Cukrowski <kamilcukrowski@gmail.com>
+FROM debian:jessie-slim
 
 # install packages
 RUN \
@@ -14,7 +12,7 @@ RUN \
   echo '- SUCCESS prepare ------------------'
 
 # some const dependent on version
-ENV TRUESTUDIO_VER x86_64_v9.2.0_20181203-0921
+ENV TRUESTUDIO_VER x86_64_v9.3.0_20190212-0734
 ENV TRUESTUDIO_URL http://download.atollic.com/TrueSTUDIO/installers/Atollic_TrueSTUDIO_for_STM32_linux_${TRUESTUDIO_VER}.tar.gz
 
 # download in one RUN
@@ -27,7 +25,7 @@ RUN  \
   rm $(basename ${TRUESTUDIO_URL}.MD5) && \
   echo '- SUCCESS download ----------------------------'
 
-ENV TRUESTUDIO_INSTALL_PATH /opt/Atollic_TrueSTUDIO_for_STM32_9.2.0
+ENV TRUESTUDIO_INSTALL_PATH /opt/Atollic_TrueSTUDIO_for_STM32_9.3.0
 
 # create links in ONE RUN
 RUN  \
